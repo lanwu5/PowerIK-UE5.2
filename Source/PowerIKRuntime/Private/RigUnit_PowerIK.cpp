@@ -13,7 +13,7 @@ FRigUnit_PowerIK_Execute()
 		return;
 	}
 
-	if (Context.State == EControlRigState::Init)
+	if (!bInitialized)
 	{
 		// load skeleton into solver
 		Core.LoadBonesFromControlRig(RigHierarchy);
@@ -37,7 +37,9 @@ FRigUnit_PowerIK_Execute()
 			BendDirectionsArray,
 			JointLimitsArray);
 
-	}else if (Context.State == EControlRigState::Update && Core.IsInitialized)
+		bInitialized = true;
+	}
+	else if (Core.IsInitialized)
 	{
 		
 		FPowerIKEffector* Effector = const_cast<FPowerIKEffector*>(Effectors.GetData());
@@ -62,7 +64,7 @@ FRigUnit_PowerIK_Execute()
 			EffectorsArray);
 
 		// run the solver
-		Core.Solver->Solve(Context.DeltaTime, SolverAlpha);
+		Core.Solver->Solve(ExecuteContext.GetDeltaTime(), SolverAlpha);
 
 		// copy the solver results
 		Core.CopySolverOutputToControlRig(RigHierarchy);

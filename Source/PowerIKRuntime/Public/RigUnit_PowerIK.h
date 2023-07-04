@@ -15,7 +15,10 @@ struct FRigUnit_PowerIK : public FRigUnitMutable
 	GENERATED_BODY()
 
 	RIGVM_METHOD()
-	virtual void Execute(const FRigUnitContext& Context) override;
+	virtual void Execute() override;
+
+	UPROPERTY(Transient)
+	bool bInitialized = false;
 
 	/** Name of joint that acts as the root of the solve. All effectors must be on children of this bone. */
 	UPROPERTY(meta = (Input, Constant, CustomWidget = "BoneName"))
